@@ -16,16 +16,16 @@ set -euo pipefail
 # If any of these are not true - you might need to tweak the script itself for your machine, not just this file.
 
 hostinstall=1
-username=ewancoder
-hostname=ivanpc
-timezone=Asia/Tbilisi
+username=slavikusvog
+hostname=dell-e5550
+timezone=Europe/Minsk
 root_password="qwerty" # Leave empty to specify during install.
 user_password="qwerty" # Leave empty to specify during install.
 windows_efi_volume="" # Only necessary for multiboot, so that GRUB is able to generate proper config.
 wlan_interface=wlan0
 shell=/bin/zsh
-keymap=dvorak # Set to 'us' to have a regular keymap.
-swapsize=20 # Swap size in Gigabytes, will be allocated on RAM.
+keymap=us # Set to 'us' to have a regular keymap.
+swapsize=0 # Swap size in Gigabytes, will be allocated on RAM.
 service=(
     docker
     bluetooth
@@ -37,7 +37,7 @@ user_packages=(
     gvim            # Text editor. GVIM package contains VIM with +clipboard support.
     less            # Tool for limiting terminal output.
     htop            # Tool for pretty resources analysis.
-    #steam           # Steam gaming client.
+    #steam          # Steam gaming client.
     code            # VS Code.
     discord         # Official Discord client.
     encfs           # Encryption filesystem client for protecting folders.
@@ -60,7 +60,6 @@ user_packages=(
     tmux                # Terminal multiplexer.
     xournalpp           # Handwritten brainstorming journal. (TODO: alternatively try Lorien: aur lorien-bin package)
     ncdu                # NCurses version of du, to see how much space is taken.
-    jellyfin-mpv-shim   # For integrating mpv with jellyfin.
 
     # Git for development: duplicated here in case we decide we don't need YAY.
     # github-cli is needed for auth credential manager to be able to authenticate (without ssh).
@@ -71,19 +70,11 @@ user_packages=(
 
     # .NET development.
     dotnet-sdk-8.0 dotnet-sdk aspnet-runtime-8.0 aspnet-runtime
-
-    # VirtualBox for VDI.
-    virtualbox virtualbox-host-modules-arch virtualbox-guest-iso
 )
 
 yay_user_packages=(
-    dropbox             # Cloud storage.
     zoom                # Messaging for work.
-    uhk-agent-appimage  # UHK agent.
     teams-for-linux-bin # Teams (instead of Skype).
-    slack-desktop       # Slack.
-    sptlrx-bin          # Real-time lyrics for Spotify.
     anki-bin            # Anki cards app.
-    zen-browser-bin     # Main browser.
     rider               # .NET development.
 )

@@ -15,7 +15,7 @@ set -euo pipefail
 #
 # If any of these are not true - you might need to tweak the script itself for your machine, not just this file.
 
-hostinstall=1
+hostinstall=0
 username=slavikusvog
 hostname=dell-e5550
 timezone=Europe/Minsk

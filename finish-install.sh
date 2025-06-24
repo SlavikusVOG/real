@@ -12,7 +12,6 @@ iwctl --passphrase $password station wlan0 connect "skazlojop"
 sleep 10
 
 pacman -Syyu
-pacman -S nvidia-open steam lib32-nvidia-utils nvidia-container-toolkit --noconfirm
 
 mkdir -p /etc/systemd/system/getty@tty1.service.d
 echo """[Service]

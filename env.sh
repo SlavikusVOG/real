@@ -18,7 +18,7 @@ install_folder=/tmp/eal
 #
 # So basically, if you can get chroot working inside your OS, you should be
 # able to install Arch linux with this script right away.
-hostinstall=1
+hostinstall=0
 
 # Path to Arch linux rootfs (minimal live-cd) *.fs.sfs image needed for
 # installation from within running OS ($hostinstall=1).

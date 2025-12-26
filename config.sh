@@ -17,7 +17,7 @@ set -euo pipefail
 
 hostinstall=0
 username=slavikusvog
-hostname=dell-e5550
+hostname=slavikusvogpc
 timezone=Europe/Minsk
 root_password="qwerty" # Leave empty to specify during install.
 user_password="qwerty" # Leave empty to specify during install.
@@ -74,7 +74,6 @@ user_packages=(
 
 yay_user_packages=(
     zoom                # Messaging for work.
-    teams-for-linux-bin # Teams (instead of Skype).
     anki-bin            # Anki cards app.
     rider               # .NET development.
 )

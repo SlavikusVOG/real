@@ -1,22 +1,35 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# TODO:
-# 2. pacman cleanup at the end fails for some reason due to a dash -
-# 3. if aur already installed - skip installing it
+# TODO: pacman cleanup at the end fails for some reason due to a dash -
 
 source env.sh
 
 clear
-mess -t "$title\nVersion $version"
+mess -t "$title\nVersion $version\nMinor version $subVersion"
+
+if [ ! -d /sys/firmware/efi ]; then
+    echo "You are loaded in MBR mode, you need to load in UEFI mode to install the system on a GPT disk."
+    echo "At this point of time, this script only supports UEFI mode. Please reboot livecd/system in UEFI mode."
+    exit
+fi
 
 if [ ! "$(id -u)" -eq 0 ]; then
     mess -w "You have to be ROOT to run this script. Exiting."
     exit
 fi
 
-mess -w "Before proceeding:\n\t1) Edit 'config.sh' configuration file\n\t2) Format your partitions & mount them to /mnt as required.\n\nOnly continue after you've done this, or press Ctrl+C to cancel script execution."
+mess -w "Before proceeding:\n\t1) Edit 'config.sh' configuration file\n\t2) Format your partitions (including swap if needed) & mount them to /mnt as required.\n\nOnly continue after you've done this, or press Ctrl+C to cancel script execution. If you are using UKI - EFI directory should be mounted to /efi (/mnt/efi)."
 source config.sh
+
+if [[ ! " ${packages[*]} " =~ " zsh " ]] && [[ $shell == "/bin/zsh" ]]; then
+    mess -w "You do not have 'zsh' package in your packages, but you set it as your desired shell. Please make sure you either install it, or change the shell."
+    exit 0
+fi
+if [[ ! " ${packages[*]} " =~ " fish " ]] && [[ $shell == "/bin/fish" ]]; then
+    mess -w "You do not have 'fish' package in your packages, but you set it as your desired shell. Please make sure you either install it, or change the shell."
+    exit 0
+fi
 
 prepare() {
     echo "source ./env.sh" > "$2"
@@ -29,6 +42,7 @@ prepare() {
            [ "${p:0:4}" == "for " ] ||
            [ "${p:0:4}" == "else" ] ||
            [ "${p:0:4}" == "done" ] ||
+           [ "${p:0:8}" == "continue" ] ||
            [ "${p:0:4}" == "' > " ] ||
            [ "${p:0:5}" == "mess " ] ||
            [ "${p:0:5}" == "elif " ] ||
@@ -115,6 +129,10 @@ mkdir -p $install_folder
 mess "Copy env.sh, config.sh"
 cp env.sh config.sh $install_folder
 
+mess "Copy packages & scripts folders"
+cp -r packages $install_folder/
+cp -r scripts $install_folder/
+
 mess "Prepare eal.sh, make it executable"
 prepare eal.sh $install_folder/eal.sh
 chmod +x $install_folder/eal.sh
@@ -129,15 +147,24 @@ mess "Prepare peal.sh, make it executable"
 prepare peal.sh $install_folder/peal.sh
 chmod +x $install_folder/peal.sh
 
-if [ -f custom.sh ]; then
-    mess "Prepare custom.sh, make it executable"
-    prepare custom.sh $install_folder/custom.sh
-    chmod +x $install_folder/custom.sh
-fi
+for script in scripts/*; do
+    filename=$(basename "$script")
+    mess "Prepare $filename, make it executable"
+    prepare "$script" "$install_folder/scripts/$filename"
+    chmod +x "$install_folder/scripts/$filename"
+done
 
-mess "Copy finish-install.sh"
-cp finish-install.sh $install_folder/finish-install.sh
-chmod +x $install_folder/finish-install.sh
+mess "Copy firstboot.sh"
+firstboot_str="${firstboot_packages[*]}"
+sed -i "s/firstboot_packages=()/firstboot_packages=( $firstboot_str )/g" firstboot.sh
+flatpak_str="${flatpak[*]}"
+sed -i "s/flatpak=()/flatpak=( $flatpak_str )/g" firstboot.sh
+sed -i "s/wifi_ssid=''/wifi_ssid='$wifi_ssid'/g" firstboot.sh
+sed -i "s/wifi_password=''/wifi_password='$wifi_password'/g" firstboot.sh
+sed -i "s/username=''/username='$username'/g" firstboot.sh
+sed -i "s/install_flatpak=1/install_flatpak=$install_flatpak/g" firstboot.sh
+cp firstboot.sh $install_folder/firstboot.sh
+chmod +x $install_folder/firstboot.sh
 
 mess "CD into temp folder"
 cd $install_folder
@@ -152,8 +179,14 @@ else
     ./eal.sh
 fi
 
-mess -p "Remove the temporary folder. This is the last step, feel free to Ctrl+C if you want to keep it"
+#mess -p "Remove the temporary folder. This is the last step, feel free to Ctrl+C if you want to keep it"
 rm -rf $install_folder
 
-mess -p "That's it, your system is installed. Run /finish-install.sh after booting in, then reboot again. [REBOOT]"
+if [ $hostinstall -eq 1 ]; then
+    mess -t "Your system is installed!"
+    exit
+fi
+
+mess -t "Your system will reboot in 10 seconds to continue the installation... Press Ctrl+C if you want to avoid this."
+sleep 10
 reboot

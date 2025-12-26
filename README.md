@@ -1,13 +1,37 @@
 # Rad Ewancoder Arch Linux installation script
 
+Forked from [https://github.com/ewancoder/real](https://github.com/ewancoder/real)
+
 This script automates installing Arch Linux, handling errors in the process and allowing you to re-run (or even change) any command during the script execution.
 
 ## How to run
 
-1. Download all scripts (or clone the repository).
-2. Edit `config.sh`, `finish-install.sh` and `custom.sh`.
+1. Boot up from LiveCD
+2. Download the script:
 
-> `custom.sh` is being run during the installation, from the `root` user; `finish-install.sh` script is copied to the installed system to be run by you manually after rebooting into the system. These two are your custom scripts, erase their content if you don't need them.
+```
+pacman -Syy
+pacman -S --noconfirm git
+git clone https://github.com/slavikusvog/real
+cd real
+```
 
-3. Run `./install.sh` under root.
-4. Enjoy :)
+3. Edit `config.sh` file carefully, reviewing each variable.
+  - If needed - create your own packages/scripts in `packages`/`scripts` folders
+4. Run the script from root:
+
+`sudo ./install.sh`
+
+At some point during the install, you will be prompted to format & mount the drivers to /mnt folder. Format and mount them accordingly.
+
+You will be given a new bash shell session. You can format your drives & mount them, and then type `exit` to exit the interactive shell session.
+
+The installation script will continue executing immediately.
+
+### Running from already running host system (Arch/Debian/anything else)
+
+You can run the script from already running distro (maybe even WSL, though untested).
+
+It uses chroot to prepare "virtual live CD" and use it for the installation.
+
+Other than that, all the steps are the same.

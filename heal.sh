@@ -51,15 +51,14 @@ cp $install_folder/eal.sh $install_folder/sfs/
 cp $install_folder/env.sh $install_folder/sfs/
 cp $install_folder/config.sh $install_folder/sfs/
 cp $install_folder/peal.sh $install_folder/sfs/
-cp $install_folder/finish-install.sh $install_folder/sfs/
-if [ -f $install_folder/custom.sh ]; then
-    cp $install_folder/custom.sh $install_folder/sfs/
-fi
+cp $install_folder/firstboot.sh $install_folder/sfs/
+cp -r $install_folder/packages $install_folder/sfs/
+cp -r $install_folder/scripts $install_folder/sfs/
 
 mess "Chroot into $install_folder/sfs and execute /eal/eal.sh"
 chroot $install_folder/sfs /eal.sh
 
-mess "Unmount everything"
+mess -t "Unmount everything"
 umount -Rl $install_folder/sfs/run
 umount -Rl $install_folder/sfs/tmp
 umount -Rl $install_folder/sfs/dev/pts

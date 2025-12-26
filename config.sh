@@ -1,79 +1,72 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# This is the main configuration file that you will edit.
-# Also check out two more files: custom.sh and finish-install.sh, you might want to edit them as well.
-# (NOTE TO SELF): update custom.sh before install
-
 # This script assumes the following:
-# 1. You have Intel CPU
-# 2. You have Nvidia GPU
-# 3. You have WIFI
-# 4. You have Bluetooth
-# 5. Your drive is in UEFI mode / GPT partitioning scheme
-# 6. Uses RAM for Swap (assuming you have lots of spare RAM)
+# 1. You have WIFI
+# 2. You have Bluetooth
+# 3. Your drive is in UEFI mode / GPT partitioning scheme
 #
 # If any of these are not true - you might need to tweak the script itself for your machine, not just this file.
 
-hostinstall=0
-username=slavikusvog
-hostname=slavikusvogpc
-timezone=Europe/Minsk
-root_password="qwerty" # Leave empty to specify during install.
-user_password="qwerty" # Leave empty to specify during install.
-windows_efi_volume="" # Only necessary for multiboot, so that GRUB is able to generate proper config.
+# Custom variables for my personal.ewancoder.sh script, can be deleted completely, or ignore them.
+crypt_password="pass"
+git_work_email="work@email.com"
+ssh_port=50000
+
+# WiFi settings.
+wifi_ssid="ssid"
+wifi_password="pass"
 wlan_interface=wlan0
+
+# Device-specific settings.
+hostname=archpc         # Should be unique per device on the same network.
+root_password="pass"    # Leave empty to specify during install.
+user_password="pass"    # Leave empty to specify during install.
+windows_efi_volume=""   # Specify if it's different from your linux EFI partition, for GRUB config generation.
+swapsize=20             # Swap size in Gigabytes, will be allocated on RAM.
+swap_partition=""       # /dev/sdb2 if you want your swap on /dev/sdb2.
+swap_file=""            # /swapfile, if you want your swap in /swapfile file.
+
+# Other settings (usually don't change).
+timezone=Europe/Minsk
+username=slavikusvog
 shell=/bin/zsh
 keymap=us # Set to 'us' to have a regular keymap.
-swapsize=0 # Swap size in Gigabytes, will be allocated on RAM.
-service=(
-    docker
-    bluetooth
-    cronie
-    systemd-networkd
+
+# Packages: build your own desktop.
+install=(
+    cpu-intel           # CPU drivers.
+    gpu-nvidia          # GPU drivers.
+    gpu-nvidia-docker   # GPU drivers support.
+    core-system         # Core Arch system.
+    security
+    fido
+    sway                # Core Sway UI environment.
+    #slavikusvog # Personal packages shared across devices.
+    #slavikusvog-laptop   # Additional tools for laptop.
+)
+loadpackages # Loads the packages into the variable.
+
+# These scripts are running in this order at the end of installation.
+personal_scripts=(
+    # personal.ewancoder.sh
+    # grub-bsod-theme.sh
+    # dropbox-sway-install.sh
+    # mega.sh
+    # asus-scar-g17-firmware.sh
+    security.sh
 )
 
-user_packages=(
-    gvim            # Text editor. GVIM package contains VIM with +clipboard support.
-    less            # Tool for limiting terminal output.
-    htop            # Tool for pretty resources analysis.
-    #steam          # Steam gaming client.
-    code            # VS Code.
-    discord         # Official Discord client.
-    encfs           # Encryption filesystem client for protecting folders.
-
-    # KDE PDF reader with many features (consider changing to vi-like one, KDE brings a lot of dependencies).
-    # qt6-multimedia-ffmpeg or qt6-multimedia-gstreamer is a dependency of okular, preselect ffmpeg.
-    okular qt6-multimedia-ffmpeg
-
-    wireguard-tools     # For connecting home PC to DO docker Swarm.
-    freerdp             # RDP client to connect to my Windows laptop.
-    ncspot              # Console Spotify client.
-    npm                 # NodeJS & NPM.
-    libreoffice-fresh   # Office packages.
-    ranger              # VI-like file manager.
-    mpv                 # Video player.
-    imv                 # Image viewer.
-    openssh             # Used to connect to SSH servers & generate ssh-keygen.
-    telegram-desktop    # Telegram messenger.
-    thefuck             # Automatic wrong command fixing.
-    tmux                # Terminal multiplexer.
-    xournalpp           # Handwritten brainstorming journal. (TODO: alternatively try Lorien: aur lorien-bin package)
-    ncdu                # NCurses version of du, to see how much space is taken.
-
-    # Git for development: duplicated here in case we decide we don't need YAY.
-    # github-cli is needed for auth credential manager to be able to authenticate (without ssh).
-    git github-cli
-
-    # Android phone mounting.
-    android-file-transfer   # Usage: aft-mtp-mount ~/mnt
-
-    # .NET development.
-    dotnet-sdk-8.0 dotnet-sdk aspnet-runtime-8.0 aspnet-runtime
-)
-
-yay_user_packages=(
-    zoom                # Messaging for work.
-    anki-bin            # Anki cards app.
-    rider               # .NET development.
-)
+# Script control options.
+auto=1 # Automatically install everything. Put 0 here to manually confirm each step.
+hostinstall=0 # If 1 - install from already running system, otherwise - livecd.
+aur_install=0 # Specify 0 here to skip installing ANY aur packages.
+yay_ask=0 # Ask for confirmation when installing YAY packages.
+install_grub=0
+install_systemdboot=1
+encrypted_root=1
+secure_boot=1
+uki=1
+uki_cmdline="rd.luks.name=uuid=root root=/dev/mapper/root rw"
+install_folder=/eal-temp # /tmp/eal means it's in RAM.
+install_flatpak=1 # Set it to 0 to completely skip installing flatpak packages.

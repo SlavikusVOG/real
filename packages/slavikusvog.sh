@@ -14,6 +14,8 @@ set -euo pipefail
 
 packages+=(
     # === Console utils ===
+    socat # Socat for forking 8096 for mediaserver.
+    jq # json parsing
     android-file-transfer   # Android phone mount: aft-mtp-mount ~/mnt
     cronie rsync    # For backups.
     encfs           # Encryption filesystem client for protecting folders.
@@ -33,11 +35,12 @@ packages+=(
     wireguard-tools # For connecting home PC to DO docker Swarm.
     wlsunset        # Control backlight color (warmer at night)
     zsh             # Alternative shell.
+    wol             # Wake-on-lan, need to wake devices like LG tv.
 
     # === Coding & Office ===
     code # VS Code.
     docker docker-compose docker-buildx # For homelab, buildx is needed for Rider debugging.
-    dotnet-sdk-8.0 dotnet-sdk aspnet-runtime-8.0 aspnet-runtime # .NET development
+    dotnet-sdk-8.0 dotnet-sdk aspnet-runtime-8.0 aspnet-runtime aspnet-targeting-pack # .NET development
     firefox # I'm using it in kiosk mode for NitroType typing.
     git # For development.
     libreoffice-fresh # Office packages.
@@ -58,12 +61,16 @@ packages+=(
     # github-cli - needed for auth credential manager to be able to authenticate (without ssh).
     # gnome-keyring - saves passwords for GTK apps: git, github-cli, google-chrome.
     # virtualbox virtualbox-host-modules-arch virtualbox-guest-iso - for work, don't use it now.
+
+    # === Custom fonts ===
+    noto-fonts-cjk
 )
 
 services+=(
     docker  # All my projects & homelab.
     cronie  # CRON jobs (regular backups).
     sshd    # SSH server.
+    fstrim.timer # Move to common core.
 )
 
 flatpak+=(
@@ -78,4 +85,5 @@ flatpak+=(
 aur+=(
     uhk-agent-appimage  # UHK agent.
     sptlrx-bin          # Real-time lyrics for Spotify.
+    bscpylgtv           # Control (turn off/on LG tv).
 )

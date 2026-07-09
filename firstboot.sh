@@ -9,6 +9,7 @@ wifi_ssid=''
 wifi_password=''
 username=''
 install_flatpak=1
+autologin=1
 
 # Link resolv.conf for internet DNS to work.
 ln -rsf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
@@ -21,12 +22,12 @@ iwctl --passphrase "$wifi_password" station wlan0 connect "$wifi_ssid"
 sleep 5
 
 # Enable UFW
-if which ifw > /dev/null; then ufw enable; fi
+if which ufw > /dev/null; then ufw enable; fi
 
+pacman -Syyu
 # Install after-reboot packages.
 if [ ${#firstboot_packages[@]} -gt 0 ]; then
     echo "Installing packages"
-    pacman -Syyu
     pacman -S $firstboot_packages --noconfirm
 fi
 
@@ -42,8 +43,12 @@ else
     echo "Skip installing Flatpak packages."
 fi
 
-# Change autologin for the user instead of the root.
-sed -i "s/root/$username/g" /etc/systemd/system/getty@tty1.service.d/autologin.conf
+# Either switch autologin to the user, or remove it entirely.
+if [ $autologin -eq 1 ]; then
+    sed -i "s/root/$username/g" /etc/systemd/system/getty@tty1.service.d/autologin.conf
+else
+    rm -rf /etc/systemd/system/getty@tty1.service.d
+fi
 
 # Delete this script.
 sed -i '/firstboot.sh/d' /root/.bash_profile

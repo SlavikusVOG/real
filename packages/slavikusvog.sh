@@ -43,10 +43,14 @@ packages+=(
     dotnet-sdk-8.0 dotnet-sdk aspnet-runtime-8.0 aspnet-runtime aspnet-targeting-pack # .NET development
     firefox # I'm using it in kiosk mode for NitroType typing.
     git # For development.
+    # gnome-keyring # Password manager.
+    # github-cli # GitHub CLI.
+    # libsecret # Password manager.
     libreoffice-fresh # Office packages.
     npm # NodeJS & NPM.
     okular qt6-multimedia-ffmpeg # KDE PFD reader (consider changing to something vi-like), requires qt6-multimedia backend.
     xournalpp # Handwritten brainstorming journal. (TODO: alternatively try Lorien: aur lorien-bin package)
+    rclone # Remote file sync.
 
     # === Multimedia ===
     discord             # Official Discord client.
@@ -64,6 +68,22 @@ packages+=(
 
     # === Custom fonts ===
     noto-fonts-cjk
+
+    # === Sway desktop ===
+    # polkit                  # privilege prompts for GUI apps (pavucontrol, flatpak, etc.)
+    # libappindicator-gtk3    # tray icons (Discord, Telegram, etc.)
+    # xdg-utils               # “open URL/file with default app” behavior
+
+    # === AMD desktop / gaming ===
+    # vulkan-tools    # vulkaninfo — quick GPU sanity check
+    # nvtop           # GPU/CPU monitor in TUI (supports AMD)
+    # gamemode        # Steam performance helper
+
+    # === Useful additional tools ===
+    # lsof            # “what’s using this port/file?”
+    # bind-tools      # dig/nslookup for DNS debugging
+    # restic          # pairs well with rclone for backups
+    # syncthing       # if you want P2P sync between devices
 )
 
 services+=(

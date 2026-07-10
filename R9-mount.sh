@@ -2,9 +2,9 @@
 set -euo pipefail
 
 # --- PARTUUIDs (GPT-level, never change unless you repartition) ---
-PART_ROOT="c4690665-a801-4478-aef0-2813a871a6ee"
-PART_DATA="88150716-018f-426b-ade5-bb123e5b1f5b"
-PART_EFI="726A-9CD8"
+PART_ROOT="1d36e5eb-0f25-463a-aff5-1442eb19fceb"
+PART_DATA="bfd71422-9111-4d79-a56b-95c06a1f6808"
+PART_EFI="3b4ea15a-5538-4cb1-9a7c-a32b57c3340a"
 
 # --- Mapper names ---
 MAP_ROOT="root"

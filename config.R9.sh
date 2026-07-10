@@ -38,7 +38,6 @@ loadpackages
 
 personal_scripts=(
     # personal.slavikusvog.sh   # create your own, or skip for now
-    mega.sh
     security.sh
 )
 

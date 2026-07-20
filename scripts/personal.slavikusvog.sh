@@ -1,6 +1,6 @@
 set -euo pipefail
 
-dotfiles_repo="ewancoder/dotfiles"
+dotfiles_repo="slavikusvog/dotfiles"
 
 # Change default SSH port, disable Password auth and Root login.
 sed -i "s/^#\?Port .*/Port ${ssh_port}/" /etc/ssh/sshd_config

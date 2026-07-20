@@ -2,8 +2,6 @@
 set -euo pipefail
 
 # === Change before install ===
-crypt_password="pass"
-git_work_email="work@email.com"
 ssh_port=50000
 wifi_ssid="ssid"
 wifi_password="pass"
@@ -12,10 +10,9 @@ user_password="pass"     # leave empty to set during install
 
 # Hardcoded settings.
 wlan_interface=wlan0
-hostname=archpc          # unique name on your network
-swapsize=20
+hostname=Ryzen9-5950X# unique name on your network
 swap_partition=""
-windows_efi_volume=""    # only if Windows EFI partition differs from Linux
+swapsize=20
 timezone=Europe/Minsk
 username=slavikusvog
 shell=/bin/zsh

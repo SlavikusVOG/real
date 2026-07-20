@@ -1,6 +1,14 @@
 set -euo pipefail
 
-dotfiles_repo="slavikusvog/dotfiles"
+dotfiles_repo="ewancoder/dotfiles"
+
+# Change default SSH port, disable Password auth and Root login.
+sed -i "s/^#\?Port .*/Port ${ssh_port}/" /etc/ssh/sshd_config
+sed -i "s/^#\?PasswordAuthentication .*/PasswordAuthentication no/" /etc/ssh/sshd_config
+sed -i "s/^#\?PermitRootLogin .*/PermitRootLogin no/" /etc/ssh/sshd_config
+
+# Add current user to docker group for sudo-less docker access.
+usermod -aG docker $username
 
 if [[ $dotfiles_repo ]]; then
     # Load dotfiles.
@@ -14,32 +22,10 @@ if [[ $dotfiles_repo ]]; then
     rm -R dotfiles
     echo "*" > .gitignore
 
-    # Update work email for git configuration.
-    sed -i "s/work@email.com/$git_work_email/" .gitconfig-work
-    git update-index --assume-unchanged .gitconfig-work
-    mv .git .dotfiles
-
-    # Set crypt password for backup scripts.
-    echo "export CRYPT_PASSWORD=$crypt_password" > /root/.secrets
-    chmod 400 /root/.secrets
-
-    # Skip, I'm using systemd-boot now
-    # Apply GRUB configuration from dotfiles.
-    #cp .etc/default/grub /etc/default/grub
-    #grub-mkconfig -o /boot/grub/grub.cfg || true
-
-    # Symlink machine-specific Sway config for my current device.
-    ln -fs /home/$username/.config/sway/$hostname /home/$username/.config/sway/machine
-
-    # Symlink machine-specific jellyfin-mpv-shim config.
-    ln -fs /home/$username/.config/jellyfin-mpv-shim/conf.$hostname.json /home/$username/.config/jellyfin-mpv-shim/conf.json
-
     # Make sure everything is owned by the user.
     chown -R $username:$username .
-
-    # Enable backups.
-    echo "0 */4 * * * /home/$username/.local/bin/backup.sh" | crontab -
 fi
 
 # Install angular globally
 npm i -g @angular/cli
+# TODO: Add other global packages here.

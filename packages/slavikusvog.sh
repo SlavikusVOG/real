@@ -1,24 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# These packages are required to run a minimal console OS with the following:
-# 1. GRUB bootloader on EFI drive
-# 2. WiFi network capabilities: iwd
-# 3. Common tools: sudo, unzip
-# 3. Filesystem tools: btrfs, ntfs-3g
-# 4. Sound support
-# 5. Bluetooth support
-
-# The following might be refactored away in future, when we update the script:
-# 6. YAY for installing AUR packages
-
 packages+=(
     # === Console utils ===
-    socat # Socat for forking 8096 for mediaserver.
     jq # json parsing
     android-file-transfer   # Android phone mount: aft-mtp-mount ~/mnt
     cronie rsync    # For backups.
-    encfs           # Encryption filesystem client for protecting folders.
     flatpak         # A temporary substitude for some AUR packages.
     freerdp         # RDP client to connect to my Windows laptop.
     gocryptfs       # Better than encfs.
@@ -35,11 +22,10 @@ packages+=(
     wireguard-tools # For connecting home PC to DO docker Swarm.
     wlsunset        # Control backlight color (warmer at night)
     zsh             # Alternative shell.
-    wol             # Wake-on-lan, need to wake devices like LG tv.
 
     # === Coding & Office ===
     code # VS Code.
-    docker docker-compose docker-buildx # For homelab, buildx is needed for Rider debugging.
+    docker docker-compose # For homelab, buildx is needed for Rider debugging.
     dotnet-sdk-8.0 dotnet-sdk aspnet-runtime-8.0 aspnet-runtime aspnet-targeting-pack # .NET development
     firefox # I'm using it in kiosk mode for NitroType typing.
     git # For development.
@@ -55,9 +41,9 @@ packages+=(
     # === Multimedia ===
     discord             # Official Discord client.
     imv                 # Image viewer.
-    jellyfin-mpv-shim   # For integrating mpv with jellyfin.
+    # jellyfin-mpv-shim   # For integrating mpv with jellyfin.
     mpv                 # Video player.
-    ncspot              # Console Spotify client.
+    # ncspot              # Console Spotify client.
     pavucontrol         # GUI volume control.
     steam               # Steam. Might rely on GPU drivers being installed first. Need to test.
     telegram-desktop    # Telegram messenger.
@@ -65,9 +51,6 @@ packages+=(
     # github-cli - needed for auth credential manager to be able to authenticate (without ssh).
     # gnome-keyring - saves passwords for GTK apps: git, github-cli, google-chrome.
     # virtualbox virtualbox-host-modules-arch virtualbox-guest-iso - for work, don't use it now.
-
-    # === Custom fonts ===
-    noto-fonts-cjk
 
     # === Sway desktop ===
     # polkit                  # privilege prompts for GUI apps (pavucontrol, flatpak, etc.)
@@ -90,7 +73,6 @@ services+=(
     docker  # All my projects & homelab.
     cronie  # CRON jobs (regular backups).
     sshd    # SSH server.
-    fstrim.timer # Move to common core.
 )
 
 flatpak+=(
@@ -98,8 +80,8 @@ flatpak+=(
     com.github.IsmaelMartinez.teams_for_linux
     com.slack.Slack
     net.ankiweb.Anki
-    app.zen_browser.zen
-    #com.jetbrains.Rider
+    # app.zen_browser.zen
+    # com.jetbrains.Rider
 )
 
 aur+=(

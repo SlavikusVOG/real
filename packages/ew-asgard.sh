@@ -16,16 +16,17 @@ packages+=(
     wireguard-tools # For connecting home PC to DO docker Swarm.
     docker docker-compose   # For homelab.
     git                     # For development.
-    samba                   # Samba share for TV screensaver.
     # x-server for XPlane
     xorg-server xorg-xinit xorg-xrandr
     i3-wm rxvt-unicode aspnet-runtime aria2 fuse3
     webkit2gtk-4.1 # For XPlane installer. (removed 'webkit2gtk' package because it's not in the repo anymore)
+    pacman-contrib # For checking updates without touching database (rootless)
+    fzf             # Fuzzy matcher.
 )
 
 services+=(
     docker  # All my projects & homelab.
     cronie  # CRON jobs (regular backups).
     sshd    # SSH server.
-    smb     # Samba share for TV screensaver.
+    tyrvis  # Tyrvis custom service synced from .etc.
 )

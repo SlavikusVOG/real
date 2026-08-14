@@ -5,10 +5,12 @@ set -euo pipefail
 PART_ROOT="1d36e5eb-0f25-463a-aff5-1442eb19fceb"
 PART_DATA="bfd71422-9111-4d79-a56b-95c06a1f6808"
 PART_EFI="3b4ea15a-5538-4cb1-9a7c-a32b57c3340a"
+PART_SWAP="d7fc14be-41f2-47ff-8aa1-1dfcdaac67ee"
 
 # --- Mapper names ---
 MAP_ROOT="root"
 MAP_DATA="data"
+MAP_SWAP="swap"
 
 TARGET="/mnt"
 
@@ -22,12 +24,14 @@ echo "=== Resolving partitions ==="
 DEV_ROOT="$(resolve "$PART_ROOT")"
 DEV_DATA="$(resolve "$PART_DATA")"
 DEV_EFI="$(resolve "$PART_EFI")"
+DEV_SWAP="$(resolve "$PART_SWAP")"
 
 printf "  %-10s %s\n" "root:" "$DEV_ROOT" "data:" "$DEV_DATA" "efi:" "$DEV_EFI"
+printf "  %-10s %s\n" "swap:" "$DEV_SWAP"
 
 echo ""
 echo "=== Opening LUKS ==="
-for pair in "$DEV_ROOT:$MAP_ROOT" "$DEV_DATA:$MAP_DATA"; do
+for pair in "$DEV_ROOT:$MAP_ROOT" "$DEV_DATA:$MAP_DATA" "$DEV_SWAP:$MAP_SWAP"; do
     dev="${pair%%:*}"
     name="${pair##*:}"
     if [ -e "/dev/mapper/$name" ]; then

@@ -67,7 +67,8 @@ packages+=(
     # bind-tools      # dig/nslookup for DNS debugging
     # restic          # pairs well with rclone for backups
     # syncthing       # if you want P2P sync between devices
-    stow            # manage farms of symbolic links (for dotfiles)
+    # stow            # manage farms of symbolic links (for dotfiles)
+    waybar          # Status bar.
 )
 
 services+=(

@@ -11,7 +11,8 @@ user_password="pass"     # leave empty to set during install
 # Hardcoded settings.
 wlan_interface=wlan0
 hostname=Ryzen9-5950X # unique name on your network
-swap_partition="/dev/mapper/swap"
+# swap_partition="/dev/mapper/swap"
+swap_file="/swap"
 swapsize=20
 timezone=Europe/Minsk
 username=slavikusvog
